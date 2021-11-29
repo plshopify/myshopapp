@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Sunra\PhpSimple\HtmlDomParser;
 
 class HomeController extends Controller
 {
@@ -23,7 +24,13 @@ class HomeController extends Controller
     }
     public function index()
     {
-
+        $data = Http::withHeaders([
+            'X-Shopify-Access-Token' => $this->token,
+        ])->get($this->storeURL . '/admin/api/2021-10/assets.json',[
+            "asset[key]" => "layout/theme.liquid"
+        ]);
+        $themeLiquid = $data->json()['asset']['value'];
+        HtmlDomParser::str_get_html($themeLiquid);
     }
 
     public function writeToFile(Request $request)
@@ -36,7 +43,7 @@ class HomeController extends Controller
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $this->token,
         ])->get($this->storeURL . '/admin/api/2021-10/script_tags.json');
-        $src = $this->hostURL . '/js/myscript.js';
+        $src = $this->hostURL . '/files/snowflake.js';
         $response = $data->json();
         $scriptTags = $response['script_tags'];
         $scriptExist = false;

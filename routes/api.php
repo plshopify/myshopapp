@@ -19,4 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('orders/create', [HomeController::class, 'orderCreate']);
+Route::get('initScriptTag', [HomeController::class, 'initScriptTag']);
+// Route::post('orders/create', [HomeController::class, 'orderCreate']);
+
+Route::put('writeToFile', [HomeController::class, 'writeToSnowFlakesFile'])->name('cart.textchange');

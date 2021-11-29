@@ -2,14 +2,34 @@
 
 namespace App\Http\Services;
 
+use DOMDocument;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use Sunra\PhpSimple\HtmlDomParser;
 
-class FileWriteService {
+use function simplehtmldom_1_5\str_get_html;
 
+class FileWriteService
+{
+    private $token;
+    private $storeURL;
+    private $hostURL;
+    private $writeFileService;
     private $content;
-    public function writeFile($input)
+    public function __construct()
     {
-        $this->content = "document.getElementsByClassName('product-form__submit button')[0].innerHTML = `$input`;";
-        File::put('js/myscript.js', $this->content);
+        $this->token = env('SHOPIFY_TOKEN');
+        $this->storeURL = env('STORE_URL');
+        $this->hostURL = env('HOST_URL');
+    }
+    public function writeToFile($input)
+    {
+        $this->content = File::get('files/snowflake.js');
+        $this->content = str_replace(
+            '<div id="snowflakeContainer"><p class="snowflake">*</p></div>',
+            '<div id="snowflakeContainer"><p class="snowflake">' . $input['sign'] . '</p></div>',
+            $this->content
+        );
+        File::put('files/snowflake.js', $this->content);
     }
 }

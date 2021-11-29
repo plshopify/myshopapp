@@ -23,13 +23,12 @@ class HomeController extends Controller
     }
     public function index()
     {
-        return view('index');
+
     }
 
-    public function changeCartText(Request $request)
+    public function writeToFile(Request $request)
     {
-        $this->writeFileService->writeFile($request->cartTxt);
-        return redirect()->back()->with('message', 'Cart text changed successfully!');
+        return $this->writeFileService->writeToFile($request->all());
     }
 
     public function initScriptTag()

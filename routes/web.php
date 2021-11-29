@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+libxml_use_internal_errors(true);
+
 Route::get('/welcome', function () {
     return view('welcome');
 });
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('initScriptTag', [HomeController::class, 'initScriptTag']);
-Route::get('initWebHook', [HomeController::class, 'initWebHook']);
+// Route::get('initWebHook', [HomeController::class, 'initWebHook']);
 
-Route::post('changeCartText', [HomeController::class, 'changeCartText'])->name('cart.textchange');
+

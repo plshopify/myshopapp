@@ -20,7 +20,7 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/', [HomeController::class, 'applyChanges']);
+Route::get('/', [HomeController::class, 'index']);
 
 // Route::get('initWebHook', [HomeController::class, 'initWebHook']);
 

@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Sunra\PhpSimple\HtmlDomParser;
 
-use function simplehtmldom_1_5\str_get_html;
-
 class FileWriteService
 {
     private $token;

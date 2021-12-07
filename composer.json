@@ -11,6 +11,7 @@
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "voku/portable-utf8": "^5.4",
         "sunra/php-simple-html-dom-parser": "1.5.2"
     },
     "require-dev": {

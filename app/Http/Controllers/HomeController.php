@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\FileWriteService;
 use App\Models\Order;
+use DOMDocument;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Sunra\PhpSimple\HtmlDomParser;
 
@@ -26,16 +26,19 @@ class HomeController extends Controller
     {
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $this->token,
-        ])->get($this->storeURL . '/admin/api/2021-10/assets.json',[
+        ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
             "asset[key]" => "layout/theme.liquid"
         ]);
         $themeLiquid = $data->json()['asset']['value'];
-        HtmlDomParser::str_get_html($themeLiquid);
+        $document = HtmlDomParser::str_get_html($themeLiquid);
+        $base = $document->createTextNode('<div></div>');
+        $document->find("head")->appendChild($base);
+        dd($document->save());
     }
 
-    public function writeToFile(Request $request)
+    public function applyChanges(Request $request)
     {
-        return $this->writeFileService->writeToFile($request->all());
+        $this->writeFileService->writeToFile($request->all());
     }
 
     public function initScriptTag()

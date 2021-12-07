@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-libxml_use_internal_errors(true);
+// libxml_use_internal_errors(true);
 
 Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'applyChanges']);
 
 // Route::get('initWebHook', [HomeController::class, 'initWebHook']);
 

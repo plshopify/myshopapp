@@ -76,6 +76,8 @@ class HomeController extends Controller
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([
+                'shop' => $shop,
+                'url' => $request->server('HTTP_REFERER'),
                 'message' => 'Unauthorised',
             ], Response::HTTP_UNAUTHORIZED);
         }

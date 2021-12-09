@@ -46,7 +46,7 @@ class HomeController extends Controller
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $this->token,
         ])->get($this->storeURL . '/admin/api/2021-10/script_tags.json');
-        $src = $this->hostURL . '/files/snowflake.js';
+        $src = $this->hostURL . '/storage/files/snowflake.js';
         $response = $data->json();
         $scriptTags = $response['script_tags'];
         $scriptExist = false;

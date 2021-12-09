@@ -72,11 +72,10 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
-        $shop = $request->shop;
+        $shop = 'https://my-pl-test-store.myshopify.com';
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([
-                'shop' => $shop,
                 'message' => 'Unauthorised',
             ], Response::HTTP_UNAUTHORIZED);
         }

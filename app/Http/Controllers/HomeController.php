@@ -72,7 +72,7 @@ class HomeController extends Controller
     public function applyChanges(Request $request)
     {
         $shop = $request->server('HTTP_REFERER');
-        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
+        $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([
                 'message' => 'Unauthorised'

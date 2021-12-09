@@ -55,19 +55,26 @@ class HomeController extends Controller
                 'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);
-            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io?shop=' . $shop);
+            $data = Http::withHeaders([
+                'X-Shopify-Access-Token' => $this->token,
+            ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+                "asset[key]" => "layout/theme.liquid"
+            ]);
+            $themeLiquid = $data->json()['asset']['value'];
+            $document = HtmlDomParser::str_get_html($themeLiquid);
+            $base = $document->createTextNode('<link rel="stylesheet" href="{{ "custom_theme.css" | asset_url }}" type="text/css""');
+            $document->find('head', 0)->appendChild($base);
+            $data = Http::withHeaders([
+                'X-Shopify-Access-Token' => $this->token,
+            ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+                "asset" => [
+                    "key" => "layout/theme.liquid",
+                    "value" => $document->save()
+                ]
+            ]);
+            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
         }
-        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io/?shop=' . $shop);
-        // $data = Http::withHeaders([
-        //     'X-Shopify-Access-Token' => $this->token,
-        // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
-        //     "asset[key]" => "layout/theme.liquid"
-        // ]);
-        // return $data->json();
-        // $themeLiquid = $data->json()['asset']['value'];
-        // $document = HtmlDomParser::str_get_html($themeLiquid);
-        // $base = $document->createTextNode('button');
-        // dd($document->find('head', 0)->innertext);
+        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
     }
 
     public function applyChanges(Request $request)

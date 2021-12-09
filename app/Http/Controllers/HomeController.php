@@ -22,21 +22,45 @@ class HomeController extends Controller
         $this->hostURL = env('HOST_URL');
         $this->writeFileService = $writeService;
     }
-    public function index()
+    public function installApp()
     {
-        $data = Http::withHeaders([
-            'X-Shopify-Access-Token' => $this->token,
-        ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
-            "asset[key]" => "layout/theme.liquid"
-        ]);
-        $themeLiquid = $data->json()['asset']['value'];
-        $document = HtmlDomParser::str_get_html($themeLiquid);
-        dd($document->save());
+        $shop = request()->shop;
+        $api_key = "46069c6b8e7cbb39309f352b3e7fefd1";
+        $scopes = "read_orders,write_products,read_themes,write_themes";
+        $redirect_uri = "https://4d2c-162-12-210-2.ngrok.io";
+
+        // Build install/approval URL to redirect to
+        $install_url = "https://" . $shop . ".myshopify.com/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);
+        return redirect()->to($install_url);
+
+        // $data = Http::withHeaders([
+        //     'X-Shopify-Access-Token' => $this->token,
+        // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+        //     "asset[key]" => "layout/theme.liquid"
+        // ]);
+        // return $data->json();
+        // $themeLiquid = $data->json()['asset']['value'];
+        // $document = HtmlDomParser::str_get_html($themeLiquid);
+        // $base = $document->createTextNode('button');
+        // dd($document->find('head', 0)->innertext);
     }
 
     public function applyChanges(Request $request)
     {
         $this->writeFileService->writeToFile($request->all());
+        $backgroundColor = "hsl(120,100%,100%)";
+        // $data = Http::withHeaders([
+        //     'X-Shopify-Access-Token' => $this->token,
+        // ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+        //     "asset" => [
+        //         "key" => "assets/custom_theme.css",
+        //         "value" => "
+        //         button {
+        //             background-color: $backgroundColor
+        //         }
+        //         "
+        //     ]
+        // ]);
     }
 
     public function initScriptTag()

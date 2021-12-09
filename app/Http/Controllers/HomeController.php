@@ -30,7 +30,7 @@ class HomeController extends Controller
         $redirect_uri = "http://rdp3.servnet.com.pk/public/generate_token";
 
         // Build install/approval URL to redirect to
-        $install_url = "https://" . $shop . ".myshopify.com/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);
+        $install_url = "https://" . $shop . "/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);
         return redirect()->to($install_url);
 
         // $data = Http::withHeaders([

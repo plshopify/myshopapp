@@ -20,7 +20,8 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/', [HomeController::class, 'installApp']);
+Route::get('/install', [HomeController::class, 'installApp']);
+Route::get('/', [HomeController::class, 'index']);
 
 // Route::get('initWebHook', [HomeController::class, 'initWebHook']);
 

@@ -22,17 +22,24 @@ class HomeController extends Controller
         $this->hostURL = env('HOST_URL');
         $this->writeFileService = $writeService;
     }
-    public function installApp()
+    public function installApp(Request $request)
     {
-        $shop = request()->shop;
+        $shop = $request->shop;
         $api_key = "46069c6b8e7cbb39309f352b3e7fefd1";
         $scopes = "read_orders,write_products,read_themes,write_themes";
-        $redirect_uri = "http://rdp3.servnet.com.pk/public/generate_token";
+        $redirect_uri = "http://rdp3.servnet.com.pk/public/";
 
         // Build install/approval URL to redirect to
         $install_url = "https://" . $shop . "/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);
         return redirect()->to($install_url);
+    }
 
+    public function index(Request $request)
+    {
+        if(empty($this->token)) {
+            putenv("SHOPIFY_TOKEN=abc");
+        }
+        dd('already installed');
         // $data = Http::withHeaders([
         //     'X-Shopify-Access-Token' => $this->token,
         // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [

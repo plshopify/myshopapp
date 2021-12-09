@@ -31,8 +31,6 @@ class HomeController extends Controller
         ]);
         $themeLiquid = $data->json()['asset']['value'];
         $document = HtmlDomParser::str_get_html($themeLiquid);
-        $base = $document->createTextNode('<div></div>');
-        $document->find("head")->appendChild($base);
         dd($document->save());
     }
 

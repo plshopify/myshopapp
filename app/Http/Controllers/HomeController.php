@@ -27,7 +27,7 @@ class HomeController extends Controller
         $shop = request()->shop;
         $api_key = "46069c6b8e7cbb39309f352b3e7fefd1";
         $scopes = "read_orders,write_products,read_themes,write_themes";
-        $redirect_uri = "https://4d2c-162-12-210-2.ngrok.io";
+        $redirect_uri = "http://rdp3.servnet.com.pk/public/generate_token";
 
         // Build install/approval URL to redirect to
         $install_url = "https://" . $shop . ".myshopify.com/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);

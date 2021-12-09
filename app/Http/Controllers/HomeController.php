@@ -72,7 +72,7 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
-        $shop = URL::previous();
+        $shop = $request->getHost();
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([

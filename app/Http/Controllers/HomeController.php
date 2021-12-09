@@ -57,7 +57,7 @@ class HomeController extends Controller
             ]);
             return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
         }
-        return Http::get('https://4d2c-162-12-210-2.ngrok.io')->body();
+        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
         // $data = Http::withHeaders([
         //     'X-Shopify-Access-Token' => $this->token,
         // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
@@ -77,7 +77,7 @@ class HomeController extends Controller
         if(!$shopData) {
             return response()->json([
                 'shop' => $shop,
-                'url' => $request->server('HTTP_REFERER'),
+                'url' => $request->server('REQUEST_URI'),
                 'current' => URL::current(),
                 'prev' => URL::previous(),
                 'message' => 'Unauthorised',

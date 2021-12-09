@@ -76,7 +76,8 @@ class HomeController extends Controller
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([
-                'message' => 'Unauthorised'
+                'message' => 'Unauthorised',
+                'shop' => $shop,
             ], Response::HTTP_UNAUTHORIZED);
         }
         $this->writeFileService->writeToFile($request->all());

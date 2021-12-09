@@ -74,12 +74,11 @@ class HomeController extends Controller
         if(!$shopData) {
             abort(403);
         }
-        ;
         $this->writeFileService->writeToFile($request->all());
         $backgroundColor = "hsl(120,100%,100%)";
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
-        ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+        ])->put($shopData->shop_url . '/admin/api/2021-10/themes/127784779970/assets.json', [
             "asset" => [
                 "key" => "assets/custom_theme.css",
                 "value" => "

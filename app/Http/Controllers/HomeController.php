@@ -78,6 +78,8 @@ class HomeController extends Controller
             return response()->json([
                 'shop' => $shop,
                 'url' => $request->server('HTTP_REFERER'),
+                'current' => URL::current(),
+                'prev' => URL::previous(),
                 'message' => 'Unauthorised',
             ], Response::HTTP_UNAUTHORIZED);
         }

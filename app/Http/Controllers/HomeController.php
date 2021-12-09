@@ -72,12 +72,11 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
-        $shop = URL::current();
+        $shop = URL::previous();
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([
                 'message' => 'Unauthorised',
-                'shop' => $shop,
             ], Response::HTTP_UNAUTHORIZED);
         }
         $this->writeFileService->writeToFile($request->all());

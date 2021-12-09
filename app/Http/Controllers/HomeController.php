@@ -9,6 +9,7 @@ use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
 use Sunra\PhpSimple\HtmlDomParser;
 
 class HomeController extends Controller
@@ -37,13 +38,13 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $shop = $request->shop;
+        $shop = 'https://' . $request->shop;
         $code = $request->code;
         $apiKey = "46069c6b8e7cbb39309f352b3e7fefd1";
         $apiSecret = "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";
-        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
+        $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
-            $result = Http::post('https://' . $shop . '/admin/oauth/access_token', [
+            $result = Http::post($shop . '/admin/oauth/access_token', [
                 'client_id' => $apiKey,
                 'client_secret' => $apiSecret,
                 'code' => $code
@@ -51,7 +52,7 @@ class HomeController extends Controller
             $response = $result->json();
             $accessToken = $response['access_token'];
             ShopDetail::create([
-                'shop_url' => $request->shop,
+                'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);
             return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
@@ -71,7 +72,7 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
-        $shop = $request->server('HTTP_REFERER');
+        $shop = URL::current();
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         if(!$shopData) {
             return response()->json([

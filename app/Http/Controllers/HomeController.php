@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\ShopDetail;
 use DOMDocument;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Sunra\PhpSimple\HtmlDomParser;
 
@@ -70,9 +71,12 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
+        $shop = $request->server('HTTP_REFERER');
         $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
         if(!$shopData) {
-            abort(403);
+            return response()->json([
+                'message' => 'Unauthorised'
+            ], Response::HTTP_UNAUTHORIZED);
         }
         $this->writeFileService->writeToFile($request->all());
         $backgroundColor = "hsl(120,100%,100%)";
@@ -88,6 +92,9 @@ class HomeController extends Controller
                 "
             ]
         ]);
+        return response()->json([
+            'message' => 'Changes saved'
+        ], Response::HTTP_OK);
     }
 
     public function initScriptTag()

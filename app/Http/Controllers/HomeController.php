@@ -56,7 +56,7 @@ class HomeController extends Controller
                 'shop_token' => $accessToken
             ]);
             $data = Http::withHeaders([
-                'X-Shopify-Access-Token' => $this->token,
+                'X-Shopify-Access-Token' => $shopData->shop_token,
             ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
                 "asset[key]" => "layout/theme.liquid"
             ]);
@@ -65,7 +65,7 @@ class HomeController extends Controller
             $base = $document->createTextNode('<link rel="stylesheet" href="{{ "custom_theme.css" | asset_url }}" type="text/css""');
             $document->find('head', 0)->appendChild($base);
             $data = Http::withHeaders([
-                'X-Shopify-Access-Token' => $this->token,
+                'X-Shopify-Access-Token' => $shopData->shop_token,
             ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
                 "asset" => [
                     "key" => "layout/theme.liquid",

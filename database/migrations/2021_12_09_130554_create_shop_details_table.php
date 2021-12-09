@@ -17,7 +17,7 @@ class CreateShopDetailsTable extends Migration
             $table->id();
             $table->string('shop_url');
             $table->string('shop_token');
-            $table->string('shop_status');
+            $table->string('shop_status')->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\FileWriteService;
 use App\Models\Order;
+use App\Models\ShopDetail;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,6 @@ class HomeController extends Controller
     private $writeFileService;
     public function __construct(FileWriteService $writeService)
     {
-        $this->token = env('SHOPIFY_TOKEN');
         $this->storeURL = env('STORE_URL');
         $this->hostURL = env('HOST_URL');
         $this->writeFileService = $writeService;
@@ -36,10 +36,22 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        if(empty($this->token)) {
-            putenv("SHOPIFY_TOKEN=abc");
+        $shop = $request->shop;
+        $code = $request->code;
+        $apiKey = "46069c6b8e7cbb39309f352b3e7fefd1";
+        $apiSecret = "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";
+        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
+        if(!$shopData) {
+            $result = Http::get('https://' . $shop . '/admin/oauth/access_token',
+            "client_id=$apiKey&client_secret=$apiSecret&code=$code");
+            $accessToken = $result['access_token'];
+            ShopDetail::create([
+                'shop_url' => $request->shop,
+                'shop_token' => $accessToken
+            ]);
+            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
         }
-        dd('already installed');
+        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
         // $data = Http::withHeaders([
         //     'X-Shopify-Access-Token' => $this->token,
         // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [

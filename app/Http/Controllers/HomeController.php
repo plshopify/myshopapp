@@ -42,9 +42,13 @@ class HomeController extends Controller
         $apiSecret = "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";
         $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
         if(!$shopData) {
-            $result = Http::get('https://' . $shop . '/admin/oauth/access_token',
-            "client_id=$apiKey&client_secret=$apiSecret&code=$code");
+            $result = Http::post('https://' . $shop . '/admin/oauth/access_token', [
+                'client_id' => $apiKey,
+                'client_secret' => $apiSecret,
+                'code' => $code
+            ]);
             $response = $result->json();
+            dd($response);
             $accessToken = $response['access_token'];
             ShopDetail::create([
                 'shop_url' => $request->shop,

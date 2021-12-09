@@ -70,20 +70,25 @@ class HomeController extends Controller
 
     public function applyChanges(Request $request)
     {
+        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
+        if(!$shopData) {
+            abort(403);
+        }
+        ;
         $this->writeFileService->writeToFile($request->all());
         $backgroundColor = "hsl(120,100%,100%)";
-        // $data = Http::withHeaders([
-        //     'X-Shopify-Access-Token' => $this->token,
-        // ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
-        //     "asset" => [
-        //         "key" => "assets/custom_theme.css",
-        //         "value" => "
-        //         button {
-        //             background-color: $backgroundColor
-        //         }
-        //         "
-        //     ]
-        // ]);
+        $data = Http::withHeaders([
+            'X-Shopify-Access-Token' => $shopData->shop_token,
+        ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+            "asset" => [
+                "key" => "assets/custom_theme.css",
+                "value" => "
+                button {
+                    background-color: $backgroundColor
+                }
+                "
+            ]
+        ]);
     }
 
     public function initScriptTag()

@@ -263,7 +263,7 @@ class FileWriteService
 generateSnowflakes();
         ";
 
-        File::put('files/snowflake.js', $this->content);
+        File::put('storage/files/snowflake.js', $this->content);
         return response()->json(['message' => 'Data written to file!'], 200);
     }
 }

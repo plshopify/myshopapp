@@ -77,7 +77,6 @@ class HomeController extends Controller
         if(!$shopData) {
             return response()->json([
                 'shop' => $shop,
-                'server' => $_SERVER,
                 'message' => 'Unauthorised',
             ], Response::HTTP_UNAUTHORIZED);
         }

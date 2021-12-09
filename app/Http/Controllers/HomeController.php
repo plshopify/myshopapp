@@ -44,7 +44,8 @@ class HomeController extends Controller
         if(!$shopData) {
             $result = Http::get('https://' . $shop . '/admin/oauth/access_token',
             "client_id=$apiKey&client_secret=$apiSecret&code=$code");
-            $accessToken = $result['access_token'];
+            $response = $result->json();
+            $accessToken = $response['access_token'];
             ShopDetail::create([
                 'shop_url' => $request->shop,
                 'shop_token' => $accessToken

@@ -55,9 +55,9 @@ class HomeController extends Controller
                 'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);
-            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
+            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io?shop=' . $shop);
         }
-        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
+        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io/?shop=' . $shop);
         // $data = Http::withHeaders([
         //     'X-Shopify-Access-Token' => $this->token,
         // ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [

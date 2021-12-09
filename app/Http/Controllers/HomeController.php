@@ -48,7 +48,6 @@ class HomeController extends Controller
                 'code' => $code
             ]);
             $response = $result->json();
-            dd($response);
             $accessToken = $response['access_token'];
             ShopDetail::create([
                 'shop_url' => $request->shop,

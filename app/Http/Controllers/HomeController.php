@@ -98,7 +98,7 @@ class HomeController extends Controller
     background-color: $backgroundColor;
     font-family: '$fontFamily';
 }
-body, h1, h2, p, div, span {
+body, h1, h2, h3, h4, h5, h6, p, div, span, a {
     font-family: '$fontFamily';
 }
 "

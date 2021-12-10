@@ -96,9 +96,8 @@ class HomeController extends Controller
                 "key" => "assets/custom_theme.css",
                 "value" => "button, .button, .btn {
     background-color: $backgroundColor;
-    font-family: '$fontFamily';
 }
-body, h1, h2, h3, h4, h5, h6, p, div, span, a {
+body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
     font-family: '$fontFamily' !Important;
 }
 "

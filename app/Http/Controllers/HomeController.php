@@ -141,42 +141,4 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
             'script' => $src
         ];
     }
-
-    public function initWebHook()
-    {
-        $data = Http::withHeaders([
-            'X-Shopify-Access-Token' => $this->token,
-        ])->get($this->storeURL . '/admin/api/2021-10/webhooks.json');
-        $src = $this->hostURL . '/api/orders/create';
-        $response = $data->json();
-        $webHooks = $response['webhooks'];
-        $webHookExist = false;
-        foreach ($webHooks as $webHook) {
-            if ($webHook['address'] == $src) {
-                $src = $webHook;
-                $webHookExist = true;
-            }
-        }
-        if (!$webHookExist) {
-            $data = Http::withHeaders([
-                'X-Shopify-Access-Token' => $this->token,
-            ])->post($this->storeURL . '/admin/api/2021-10/webhooks.json', [
-                "webhook" => [
-                    "topic" => "orders/create",
-                    "address" => $src,
-                    "format" => "json"
-                ]
-            ]);
-            return $data->json();
-        }
-        return [
-            'message' => 'Webhook already exist!',
-            'Webhook' => $src
-        ];
-    }
-
-    public function orderCreate(Request $request)
-    {
-        Order::create($request->all());
-    }
 }

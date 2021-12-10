@@ -100,7 +100,8 @@ class HomeController extends Controller
             ]
         ]);
         return response()->json([
-            'message' => 'Changes saved'
+            'message' => 'Changes saved',
+            'color' => $backgroundColor
         ], Response::HTTP_OK);
     }
 

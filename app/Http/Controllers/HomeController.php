@@ -72,9 +72,9 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-            return redirect()->to('https://958b-162-12-210-2.ngrok.io');
+            return redirect()->to('https://958b-162-12-210-2.ngrok.io?shop='. $shop);
         }
-        return redirect()->to('https://958b-162-12-210-2.ngrok.io?shop='.$shop);
+        return redirect()->to('https://958b-162-12-210-2.ngrok.io?shop=' . $shop);
     }
 
     public function applyChanges(Request $request)

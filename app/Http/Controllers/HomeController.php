@@ -72,9 +72,9 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-            return redirect()->to('http://localhost:3000');
+            return redirect()->to('https://958b-162-12-210-2.ngrok.io');
         }
-        return redirect()->to('http://localhost:3000');
+        return redirect()->to('https://958b-162-12-210-2.ngrok.io');
     }
 
     public function applyChanges(Request $request)

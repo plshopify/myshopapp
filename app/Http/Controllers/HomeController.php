@@ -88,6 +88,7 @@ class HomeController extends Controller
         // }
         $this->writeFileService->writeToFile($request->all());
         $backgroundColor = $request->color;
+        $fontFamily = $request->font;
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
         ])->put($shopData->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
@@ -95,6 +96,7 @@ class HomeController extends Controller
                 "key" => "assets/custom_theme.css",
                 "value" => "button, .button, .btn {
     background-color: $backgroundColor;
+    font-family: '$fontFamily'
 }
 "
             ]

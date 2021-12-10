@@ -97,6 +97,9 @@ class HomeController extends Controller
                 "value" => "button, .button, .btn {
     background-color: $backgroundColor;
     font-family: '$fontFamily';
+},
+body {
+    font-family: '$fontFamily';
 }
 "
             ]

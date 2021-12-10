@@ -99,7 +99,7 @@ class HomeController extends Controller
     font-family: '$fontFamily';
 },
 body {
-    font-family: '$fontFamily';
+    font-family: '$fontFamily' !important;
 }
 "
             ]

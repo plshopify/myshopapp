@@ -57,7 +57,7 @@ class HomeController extends Controller
             ]);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
-            ])->get($this->storeURL . '/admin/api/2021-10/themes/126774870210/assets.json', [
+            ])->get($shop . '/admin/api/2021-10/themes/126774870210/assets.json', [
                 "asset[key]" => "layout/theme.liquid"
             ]);
             $themeLiquid = $data->json()['asset']['value'];
@@ -66,7 +66,7 @@ class HomeController extends Controller
             $document->find('head', 0)->appendChild($node);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
-            ])->put($this->storeURL . '/admin/api/2021-10/themes/126774870210/assets.json', [
+            ])->put($shop . '/admin/api/2021-10/themes/126774870210/assets.json', [
                 "asset" => [
                     "key" => "layout/theme.liquid",
                     "value" => $document->save()
@@ -100,8 +100,7 @@ class HomeController extends Controller
             ]
         ]);
         return response()->json([
-            'message' => 'Changes saved',
-            'color' => $backgroundColor
+            'message' => 'Changes saved'
         ], Response::HTTP_OK);
     }
 

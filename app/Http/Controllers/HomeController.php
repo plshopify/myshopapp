@@ -29,7 +29,7 @@ class HomeController extends Controller
         $shop = $request->shop;
         $api_key = "46069c6b8e7cbb39309f352b3e7fefd1";
         $scopes = "read_orders,write_products,read_themes,write_themes,read_script_tags,write_script_tags";
-        $redirect_uri = "http://rdp3.servnet.com.pk/public";
+        $redirect_uri = "http://rdp3.servnet.com.pk/public/";
 
         // Build install/approval URL to redirect to
         $install_url = "https://" . $shop . "/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);

@@ -28,8 +28,8 @@ class HomeController extends Controller
     {
         $shop = $request->shop;
         $api_key = "46069c6b8e7cbb39309f352b3e7fefd1";
-        $scopes = "read_orders,write_products,read_themes,write_themes";
-        $redirect_uri = "http://rdp3.servnet.com.pk/public/";
+        $scopes = "read_orders,write_products,read_themes,write_themes,read_script_tags,write_script_tags";
+        $redirect_uri = "http://rdp3.servnet.com.pk/public";
 
         // Build install/approval URL to redirect to
         $install_url = "https://" . $shop . "/admin/oauth/authorize?client_id=" . $api_key . "&scope=" . $scopes . "&redirect_uri=" . urlencode($redirect_uri);
@@ -57,47 +57,46 @@ class HomeController extends Controller
             ]);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
-            ])->get($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+            ])->get($this->storeURL . '/admin/api/2021-10/themes/126774870210/assets.json', [
                 "asset[key]" => "layout/theme.liquid"
             ]);
             $themeLiquid = $data->json()['asset']['value'];
-            $document = HtmlDomParser::str_get_html($themeLiquid);
-            $base = $document->createTextNode('<link rel="stylesheet" href="{{ "custom_theme.css" | asset_url }}" type="text/css""');
-            $document->find('head', 0)->appendChild($base);
+            $document = HtmlDomParser::str_get_html($themeLiquid, TRUE, TRUE, DEFAULT_TARGET_CHARSET, false);
+            $node = $document->createTextNode('<link rel="stylesheet" href="{{ '. "'" .'custom_theme.css'."'".' | asset_url }}" type="text/css">');
+            $document->find('head', 0)->appendChild($node);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
-            ])->put($this->storeURL . '/admin/api/2021-10/themes/127784779970/assets.json', [
+            ])->put($this->storeURL . '/admin/api/2021-10/themes/126774870210/assets.json', [
                 "asset" => [
                     "key" => "layout/theme.liquid",
                     "value" => $document->save()
                 ]
             ]);
-            return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
+            return redirect()->to('http://localhost:3000');
         }
-        return redirect()->to('https://4d2c-162-12-210-2.ngrok.io');
+        return redirect()->to('http://localhost:3000');
     }
 
     public function applyChanges(Request $request)
     {
-        $shop = 'https://my-pl-test-store.myshopify.com';
+        $shop = $request->shop;
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
-        if(!$shopData) {
-            return response()->json([
-                'message' => 'Unauthorised',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+        // if(!$shopData) {
+        //     return response()->json([
+        //         'message' => 'Unauthorised',
+        //     ], Response::HTTP_UNAUTHORIZED);
+        // }
         $this->writeFileService->writeToFile($request->all());
-        $backgroundColor = "hsl(120,100%,100%)";
+        $backgroundColor = $request->color;
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
-        ])->put($shopData->shop_url . '/admin/api/2021-10/themes/127784779970/assets.json', [
+        ])->put($shopData->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
             "asset" => [
                 "key" => "assets/custom_theme.css",
-                "value" => "
-                button {
-                    background-color: $backgroundColor
-                }
-                "
+                "value" => "button, .button, .btn {
+    background-color: $backgroundColor;
+}
+"
             ]
         ]);
         return response()->json([
@@ -107,8 +106,10 @@ class HomeController extends Controller
 
     public function initScriptTag()
     {
+        $shop = 'https://my-pl-test-store.myshopify.com';
+        $shopData = ShopDetail::firstWhere('shop_url', $shop);
         $data = Http::withHeaders([
-            'X-Shopify-Access-Token' => $this->token,
+            'X-Shopify-Access-Token' => $shopData->shop_token,
         ])->get($this->storeURL . '/admin/api/2021-10/script_tags.json');
         $src = $this->hostURL . '/storage/files/snowflake.js';
         $response = $data->json();
@@ -122,7 +123,7 @@ class HomeController extends Controller
         }
         if (!$scriptExist) {
             $data = Http::withHeaders([
-                'X-Shopify-Access-Token' => $this->token,
+                'X-Shopify-Access-Token' => $shopData->shop_token,
             ])->post($this->storeURL . '/admin/api/2021-10/script_tags.json', [
                 "script_tag" => [
                     "event" => "onload",

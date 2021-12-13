@@ -22,7 +22,7 @@ class FileWriteService
     }
     public function writeToFile($input, $shop)
     {
-
+        $sign = $input['sign'] ?? '*';
         $this->content = "function create(htmlStr) {
             var frag = document.createDocumentFragment(),
                 temp = document.createElement('div');
@@ -68,7 +68,7 @@ class FileWriteService
 
         /* INJECT HTML */
         var fragment = create(`
-        <div id='snowflakeContainer'><p class='snowflake'>" . $input['sign'] . "</p></div>
+        <div id='snowflakeContainer'><p class='snowflake'>" . $sign . "</p></div>
         `);
         // You can use native DOM methods to insert the fragment:
         document.body.insertBefore(fragment, document.body.childNodes[0]);

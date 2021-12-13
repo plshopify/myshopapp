@@ -14,4 +14,9 @@ class ShopDetail extends Model
     protected $fillable = [
         'shop_url', 'shop_token', 'shop_status'
     ];
+
+    public function themes()
+    {
+        return $this->belongsToMany('App\Models\Theme', 'shop_detail_theme', 'shop_detail_id', 'theme_id');
+    }
 }

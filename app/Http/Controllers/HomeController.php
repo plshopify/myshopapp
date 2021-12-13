@@ -67,7 +67,7 @@ class HomeController extends Controller
             ]);
             $themeLiquid = $data->json()['asset']['value'];
             $document = HtmlDomParser::str_get_html($themeLiquid, TRUE, TRUE, DEFAULT_TARGET_CHARSET, false);
-            $node = $document->createTextNode('<link rel="stylesheet" href="{{ ' . "'" . 'custom_theme.css' . "'" . ' | asset_url }}" type="text/css">');
+            $node = $document->createTextNode('<link rel="stylesheet" href="{{ ' . "'" . 'themeapp_style.css' . "'" . ' | asset_url }}" type="text/css">');
             $document->find('head', 0)->appendChild($node);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
@@ -77,12 +77,12 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-
+            $fileData = $this->writeFileService->writeToFile($request->all(), $newShop);
             // register script tag
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
             ])->get($newShop->shop_url . '/admin/api/2021-10/script_tags.json');
-            $src = $this->hostURL . '/storage/files/snowflake.js';
+            $src = $fileData['url'];
             $response = $data->json();
             $scriptTags = $response['script_tags'];
             $scriptExist = false;
@@ -116,14 +116,14 @@ class HomeController extends Controller
         //         'message' => 'Unauthorised',
         //     ], Response::HTTP_UNAUTHORIZED);
         // }
-        $this->writeFileService->writeToFile($request->all());
+        $this->writeFileService->writeToFile($request->all(), $shopData);
         $backgroundColor = $request->color;
         $fontFamily = $request->font;
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
         ])->put($shopData->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
             "asset" => [
-                "key" => "assets/custom_theme.css",
+                "key" => "assets/themeapp_style.css",
                 "value" => "button, .button, .btn {
     background-color: $backgroundColor;
 }

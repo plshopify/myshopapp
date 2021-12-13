@@ -20,7 +20,7 @@ class FileWriteService
         $this->storeURL = env('STORE_URL');
         $this->hostURL = env('HOST_URL');
     }
-    public function writeToFile($input)
+    public function writeToFile($input, $shop)
     {
 
         $this->content = "function create(htmlStr) {
@@ -263,7 +263,16 @@ class FileWriteService
 generateSnowflakes();
         ";
 
-        File::put('storage/files/snowflake.js', $this->content);
-        return response()->json(['message' => 'Data written to file!'], 200);
+        $data = Http::withHeaders([
+            'X-Shopify-Access-Token' => $shop->shop_token,
+        ])->put($shop->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
+            "asset" => [
+                "key" => "assets/themeapp_script.js",
+                "value" => $this->content
+            ]
+        ]);
+        $response = $data->json();
+        return response()->json(['message' => 'Data written to file!',
+        'url' => $response['asset']['public_url']], 200);
     }
 }

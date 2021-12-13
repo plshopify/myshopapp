@@ -77,7 +77,7 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-            $fileData = $this->writeFileService->writeToFile($request->all(), $newShop)->toArray();
+            $fileData = json_decode($this->writeFileService->writeToFile($request->all(), $newShop)->getContent(), true);
             // register script tag
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,

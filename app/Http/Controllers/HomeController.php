@@ -137,37 +137,4 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
             'message' => 'Changes saved'
         ], Response::HTTP_OK);
     }
-
-    public function initScriptTag(Request $request)
-    {
-        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
-        $data = Http::withHeaders([
-            'X-Shopify-Access-Token' => $shopData->shop_token,
-        ])->get($this->storeURL . '/admin/api/2021-10/script_tags.json');
-        $src = $this->hostURL . '/storage/files/snowflake.js';
-        $response = $data->json();
-        $scriptTags = $response['script_tags'];
-        $scriptExist = false;
-        foreach ($scriptTags as $scriptTag) {
-            if ($scriptTag['src'] == $src) {
-                $src = $scriptTag;
-                $scriptExist = true;
-            }
-        }
-        if (!$scriptExist) {
-            $data = Http::withHeaders([
-                'X-Shopify-Access-Token' => $shopData->shop_token,
-            ])->post($this->storeURL . '/admin/api/2021-10/script_tags.json', [
-                "script_tag" => [
-                    "event" => "onload",
-                    "src" => $src
-                ]
-            ]);
-            return $data->json();
-        }
-        return [
-            'message' => 'Script already exist!',
-            'script' => $src
-        ];
-    }
 }

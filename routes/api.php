@@ -19,7 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('initScriptTag', [HomeController::class, 'initScriptTag']);
-// Route::post('orders/create', [HomeController::class, 'orderCreate']);
-
 Route::post('applyChanges', [HomeController::class, 'applyChanges']);

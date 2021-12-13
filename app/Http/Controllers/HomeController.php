@@ -14,13 +14,12 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 class HomeController extends Controller
 {
-    private $token;
-    private $storeURL;
+    private $AppURL;
     private $hostURL;
     private $writeFileService;
     public function __construct(FileWriteService $writeService)
     {
-        $this->storeURL = env('STORE_URL');
+        $this->AppURL = env('SHOPIFY_APP_URL');
         $this->hostURL = env('HOST_URL');
         $this->writeFileService = $writeService;
     }
@@ -43,7 +42,9 @@ class HomeController extends Controller
         $apiKey = "46069c6b8e7cbb39309f352b3e7fefd1";
         $apiSecret = "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";
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
-        if(!$shopData) {
+        if (!$shopData) {
+
+            // generating access token
             $result = Http::post($shop . '/admin/oauth/access_token', [
                 'client_id' => $apiKey,
                 'client_secret' => $apiSecret,
@@ -51,10 +52,14 @@ class HomeController extends Controller
             ]);
             $response = $result->json();
             $accessToken = $response['access_token'];
+
+            // persist shop to the database
             $newShop = ShopDetail::create([
                 'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);
+
+            // include custom_theme.css in theme.liquid
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
             ])->get($shop . '/admin/api/2021-10/themes/126774870210/assets.json', [
@@ -62,7 +67,7 @@ class HomeController extends Controller
             ]);
             $themeLiquid = $data->json()['asset']['value'];
             $document = HtmlDomParser::str_get_html($themeLiquid, TRUE, TRUE, DEFAULT_TARGET_CHARSET, false);
-            $node = $document->createTextNode('<link rel="stylesheet" href="{{ '. "'" .'custom_theme.css'."'".' | asset_url }}" type="text/css">');
+            $node = $document->createTextNode('<link rel="stylesheet" href="{{ ' . "'" . 'custom_theme.css' . "'" . ' | asset_url }}" type="text/css">');
             $document->find('head', 0)->appendChild($node);
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
@@ -72,9 +77,35 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-            return redirect()->to('https://958b-162-12-210-2.ngrok.io?shop='. $shop);
+
+            // register script tag
+            $data = Http::withHeaders([
+                'X-Shopify-Access-Token' => $newShop->shop_token,
+            ])->get($newShop->shop_url . '/admin/api/2021-10/script_tags.json');
+            $src = $this->hostURL . '/storage/files/snowflake.js';
+            $response = $data->json();
+            $scriptTags = $response['script_tags'];
+            $scriptExist = false;
+            foreach ($scriptTags as $scriptTag) {
+                if ($scriptTag['src'] == $src) {
+                    $src = $scriptTag;
+                    $scriptExist = true;
+                }
+            }
+            if (!$scriptExist) {
+                $data = Http::withHeaders([
+                    'X-Shopify-Access-Token' => $shopData->shop_token,
+                ])->post($this->storeURL . '/admin/api/2021-10/script_tags.json', [
+                    "script_tag" => [
+                        "event" => "onload",
+                        "src" => $src
+                    ]
+                ]);
+                return $data->json();
+            }
+            return redirect()->to($this->AppURL . '?shop=' . $shop);
         }
-        return redirect()->to('https://958b-162-12-210-2.ngrok.io?shop=' . $shop);
+        return redirect()->to($this->AppURL . '?shop=' . $shop);
     }
 
     public function applyChanges(Request $request)
@@ -108,10 +139,9 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
         ], Response::HTTP_OK);
     }
 
-    public function initScriptTag()
+    public function initScriptTag(Request $request)
     {
-        $shop = 'https://my-pl-test-store.myshopify.com';
-        $shopData = ShopDetail::firstWhere('shop_url', $shop);
+        $shopData = ShopDetail::firstWhere('shop_url', $request->shop);
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
         ])->get($this->storeURL . '/admin/api/2021-10/script_tags.json');

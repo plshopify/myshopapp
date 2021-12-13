@@ -95,7 +95,7 @@ class HomeController extends Controller
             if (!$scriptExist) {
                 $data = Http::withHeaders([
                     'X-Shopify-Access-Token' => $newShop->shop_token,
-                ])->post($this->storeURL . '/admin/api/2021-10/script_tags.json', [
+                ])->post($newShop->shop_url. '/admin/api/2021-10/script_tags.json', [
                     "script_tag" => [
                         "event" => "onload",
                         "src" => $src

@@ -102,9 +102,9 @@ class HomeController extends Controller
                     ]
                 ]);
             }
-            return redirect()->to($this->AppURL . '?shop=' . $shop);
+            return redirect()->to($this->AppURL . '?shop=' . $shop . '&type=install');
         }
-        return redirect()->to($this->AppURL . '?shop=' . $shop);
+        return redirect()->to($this->AppURL . '?shop=' . $shop. '&type=openapp');
     }
 
     public function applyChanges(Request $request)

@@ -101,7 +101,6 @@ class HomeController extends Controller
                         "src" => $src
                     ]
                 ]);
-                return $data->json();
             }
             return redirect()->to($this->AppURL . '?shop=' . $shop);
         }

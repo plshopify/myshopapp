@@ -23,6 +23,5 @@ Route::get('/welcome', function () {
 Route::get('/install', [HomeController::class, 'installApp']);
 Route::get('/', [HomeController::class, 'index']);
 
-// Route::get('initWebHook', [HomeController::class, 'initWebHook']);
 
 

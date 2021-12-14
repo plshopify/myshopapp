@@ -15,6 +15,10 @@ class ShopDetail extends Model
         'shop_url', 'shop_token', 'shop_status'
     ];
 
+    protected $hidden = [
+        'shop_token'
+    ];
+
     public function themes()
     {
         return $this->belongsToMany('App\Models\Theme', 'shop_detail_theme', 'shop_detail_id', 'theme_id');

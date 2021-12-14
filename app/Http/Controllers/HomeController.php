@@ -107,13 +107,13 @@ class HomeController extends Controller
         return redirect()->to($this->AppURL . '?shop=' . $shop . '&type=openapp');
     }
 
-    public function applyChanges($id, Request $request)
+    public function applyChanges(Request $request, $id)
     {
         $shop = $request->shop;
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
         $this->writeFileService->writeToFile($request->all(), $shopData);
         $backgroundColor = $request->color;
-        $fontFamily = $request->font;
+        $fontFamily = $request->font_family;
         $data = Http::withHeaders([
             'X-Shopify-Access-Token' => $shopData->shop_token,
         ])->put($shopData->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
@@ -123,7 +123,7 @@ class HomeController extends Controller
     background-color: $backgroundColor;
 }
 body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
-    font-family: '$fontFamily' !Important;
+    font-family: '$fontFamily' !important;
 }
 "
             ]

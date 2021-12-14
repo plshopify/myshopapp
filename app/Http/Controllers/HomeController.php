@@ -128,10 +128,15 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
 "
             ]
         ]);
+        $themeData = $shopData->themes()->wherePivot('applied', 1)->first();
+        $shopData->themes()->updateExistingPivot($themeData->id, [
+            'applied' => 0
+        ]);
         $shopData->themes()->syncWithoutDetaching([$id => [
             'effect' => $request->sign,
             'color' => $request->color,
-            'font_family' => $request->font_family
+            'font_family' => $request->font_family,
+            'applied' => 1
         ]]);
         return response()->json([
             'message' => 'Changes saved'

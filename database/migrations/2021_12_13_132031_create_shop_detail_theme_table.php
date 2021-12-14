@@ -20,6 +20,7 @@ class CreateShopDetailThemeTable extends Migration
             $table->string('effect');
             $table->string('color');
             $table->string('font_family');
+            $table->integer('applied');
             $table->timestamps();
         });
     }

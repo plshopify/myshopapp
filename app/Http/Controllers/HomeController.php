@@ -95,7 +95,7 @@ class HomeController extends Controller
             if (!$scriptExist) {
                 $data = Http::withHeaders([
                     'X-Shopify-Access-Token' => $newShop->shop_token,
-                ])->post($newShop->shop_url. '/admin/api/2021-10/script_tags.json', [
+                ])->post($newShop->shop_url . '/admin/api/2021-10/script_tags.json', [
                     "script_tag" => [
                         "event" => "onload",
                         "src" => $src
@@ -104,18 +104,13 @@ class HomeController extends Controller
             }
             return redirect()->to($this->AppURL . '?shop=' . $shop . '&type=install');
         }
-        return redirect()->to($this->AppURL . '?shop=' . $shop. '&type=openapp');
+        return redirect()->to($this->AppURL . '?shop=' . $shop . '&type=openapp');
     }
 
-    public function applyChanges(Request $request)
+    public function applyChanges($id, Request $request)
     {
         $shop = $request->shop;
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
-        // if(!$shopData) {
-        //     return response()->json([
-        //         'message' => 'Unauthorised',
-        //     ], Response::HTTP_UNAUTHORIZED);
-        // }
         $this->writeFileService->writeToFile($request->all(), $shopData);
         $backgroundColor = $request->color;
         $fontFamily = $request->font;
@@ -133,6 +128,11 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
 "
             ]
         ]);
+        $shopData->themes()->syncWithoutDetaching([$id => [
+            'effect' => $request->sign,
+            'color' => $request->color,
+            'font_family' => $request->font_family
+        ]]);
         return response()->json([
             'message' => 'Changes saved'
         ], Response::HTTP_OK);

@@ -6,8 +6,10 @@ use App\Http\Services\FileWriteService;
 use App\Models\Order;
 use App\Models\ShopDetail;
 use DOMDocument;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Sunra\PhpSimple\HtmlDomParser;
@@ -128,20 +130,26 @@ body, h1, h2, h3, h4, h5, h6, p, div, span, a, button {
 "
             ]
         ]);
-        $themeData = $shopData->themes()->wherePivot('applied', 1)->first();
-        if ($themeData) {
-            $shopData->themes()->updateExistingPivot($themeData->id, [
-                'applied' => 0
-            ]);
+        DB::beginTransaction();
+        try {
+            $themeData = $shopData->themes()->wherePivot('applied', 1)->first();
+            if ($themeData) {
+                $shopData->themes()->updateExistingPivot($themeData->id, [
+                    'applied' => 0
+                ]);
+            }
+            $shopData->themes()->syncWithoutDetaching([$id => [
+                'effect' => $request->sign,
+                'color' => $request->color,
+                'font_family' => $request->font_family,
+                'applied' => 1
+            ]]);
+            DB::commit();
+            return response()->json([
+                'message' => 'Changes saved'
+            ], Response::HTTP_OK);
+        } catch (Exception $e) {
+            DB::rollBack();
         }
-        $shopData->themes()->syncWithoutDetaching([$id => [
-            'effect' => $request->sign,
-            'color' => $request->color,
-            'font_family' => $request->font_family,
-            'applied' => 1
-        ]]);
-        return response()->json([
-            'message' => 'Changes saved'
-        ], Response::HTTP_OK);
     }
 }

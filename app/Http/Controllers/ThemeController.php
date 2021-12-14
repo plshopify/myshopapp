@@ -29,16 +29,10 @@ class ThemeController extends Controller
     public function getThemeDetail($id)
     {
         $shop = $this->shop;
-        $themeDetail = Theme::find($id);
-        if (!$themeDetail) {
-            return response()->json([
-                'message' => 'Theme not found!',
-            ], Response::HTTP_NOT_FOUND);
-        }
         $callback = function ($q) use ($shop) {
             $q->where('shop_url', $shop);
         };
-        $themeDetail = $themeDetail->whereHas('shop_details', $callback)->first();
+        $themeDetail = Theme::whereHas('shop_details', $callback)->find($id);
         if (!$themeDetail) {
             return response()->json([
                 'message' => 'Theme do not belongs to this shop!',

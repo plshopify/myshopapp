@@ -267,7 +267,7 @@ generateSnowflakes();
         Storage::put('public/files/' . $shop[0] . '.js', $this->content);
         return [
             'message' => 'Data written to file',
-            'url' => url()->to('/storage/files/' . $shop[0] . '.js')
+            'url' => url()->secure('/storage/files/' . $shop[0] . '.js')
         ];
     }
 }

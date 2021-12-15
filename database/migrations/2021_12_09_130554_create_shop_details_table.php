@@ -15,7 +15,9 @@ class CreateShopDetailsTable extends Migration
     {
         Schema::create('shop_details', function (Blueprint $table) {
             $table->id();
+            $table->string('shop_name');
             $table->string('shop_url');
+            $table->string('shop_image');
             $table->string('shop_token');
             $table->string('shop_status')->default('active');
             $table->timestamps();

@@ -21,6 +21,7 @@ class ShopDetail extends Model
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Theme', 'shop_detail_theme', 'shop_detail_id', 'theme_id');
+        return $this->belongsToMany('App\Models\Theme', 'shop_detail_theme', 'shop_detail_id', 'theme_id')
+        ->withPivot('effect', 'color', 'font_family', 'applied')->withTimestamps();
     }
 }

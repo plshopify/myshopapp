@@ -22,6 +22,7 @@ class CreateShopDetailThemeTable extends Migration
             $table->string('font_family');
             $table->integer('applied');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

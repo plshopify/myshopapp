@@ -20,6 +20,7 @@ class CreateThemesTable extends Migration
             $table->string('theme_image');
             $table->string('theme_version');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

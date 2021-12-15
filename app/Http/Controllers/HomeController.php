@@ -79,7 +79,7 @@ class HomeController extends Controller
                     "value" => $document->save()
                 ]
             ]);
-            $fileData = json_decode($this->writeFileService->writeToFile($request->all(), $newShop)->getContent(), true);
+            $fileData = $this->writeFileService->writeToFile($request->all(), $request->shop);
             // register script tag
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
@@ -113,7 +113,8 @@ class HomeController extends Controller
     {
         $shop = $request->shop;
         $shopData = ShopDetail::firstWhere('shop_url', $shop);
-        $this->writeFileService->writeToFile($request->all(), $shopData);
+        $shopName = preg_replace("(^https?://)", "", $shop );
+        $this->writeFileService->writeToFile($request->all(), $shopName);
         $backgroundColor = $request->color;
         $fontFamily = $request->font_family;
         $data = Http::withHeaders([

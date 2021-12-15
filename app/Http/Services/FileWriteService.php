@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use DOMDocument;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Sunra\PhpSimple\HtmlDomParser;
 
 class FileWriteService
@@ -262,17 +263,11 @@ class FileWriteService
 
 generateSnowflakes();
         ";
-
-        $data = Http::withHeaders([
-            'X-Shopify-Access-Token' => $shop->shop_token,
-        ])->put($shop->shop_url . '/admin/api/2021-10/themes/126774870210/assets.json', [
-            "asset" => [
-                "key" => "assets/themeapp_script.js",
-                "value" => $this->content
-            ]
-        ]);
-        $response = $data->json();
-        return response()->json(['message' => 'Data written to file!',
-        'url' => $response['asset']['public_url']], 200);
+        $shop = explode('.', $shop);
+        Storage::put('public/files/' . $shop[0] . '.js', $this->content);
+        return [
+            'message' => 'Data written to file',
+            'url' => url()->to('/storage/files/' . $shop[0] . '.js')
+        ];
     }
 }

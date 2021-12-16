@@ -63,7 +63,7 @@ class HomeController extends Controller
 
             // persist shop to the database
             $newShop = ShopDetail::create([
-                'shop_name' => $shopConfig['name'],
+                'shop_name' => $shopConfig['shop']['name'],
                 'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);

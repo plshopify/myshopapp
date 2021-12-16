@@ -44,4 +44,19 @@ class ThemeController extends Controller
             'message' => 'Theme detail retrieved successfully'
         ], Response::HTTP_OK);
     }
+
+    public function getThemeReviews($id)
+    {
+        $themeDetail = Theme::find($id);
+        if (!$themeDetail) {
+            return response()->json([
+                'message' => 'Theme not found!',
+            ], Response::HTTP_NOT_FOUND);
+        }
+        $themeDetail = $themeDetail->load(['shop_details']);
+        return response()->json([
+            'data' => $themeDetail,
+            'message' => 'Theme review retrieved successfully'
+        ], Response::HTTP_OK);
+    }
 }

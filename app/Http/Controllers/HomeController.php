@@ -55,8 +55,15 @@ class HomeController extends Controller
             $response = $result->json();
             $accessToken = $response['access_token'];
 
+            $data = Http::withHeaders([
+                'X-Shopify-Access-Token' => $accessToken,
+            ])->get($shop . '/admin/api/2021-10/shop.json');
+
+            $shopConfig = $data->json();
+
             // persist shop to the database
             $newShop = ShopDetail::create([
+                'shop_name' => $shopConfig['name'],
                 'shop_url' => $shop,
                 'shop_token' => $accessToken
             ]);

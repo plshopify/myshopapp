@@ -12,7 +12,7 @@ class ShopDetail extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'shop_url', 'shop_token', 'shop_status'
+        'shop_name', 'shop_url', 'shop_image', 'shop_token', 'shop_status'
     ];
 
     protected $hidden = [

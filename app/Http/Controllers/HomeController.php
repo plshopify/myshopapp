@@ -65,6 +65,7 @@ class HomeController extends Controller
             $newShop = ShopDetail::create([
                 'shop_name' => $shopConfig['shop']['name'],
                 'shop_url' => $shop,
+                'shop_image' => 'image',
                 'shop_token' => $accessToken
             ]);
 

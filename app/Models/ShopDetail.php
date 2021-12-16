@@ -24,4 +24,10 @@ class ShopDetail extends Model
         return $this->belongsToMany('App\Models\Theme', 'shop_detail_theme', 'shop_detail_id', 'theme_id')
             ->withPivot('effect', 'color', 'font_family', 'applied', 'rating', 'review')->withTimestamps();
     }
+
+    public function themes_reviews()
+    {
+        return $this->belongsToMany('App\Models\Theme', 'reviews', 'shop_detail_id', 'theme_id')
+            ->withPivot('rating', 'review')->withTimestamps();
+    }
 }

@@ -23,4 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('applyChanges/{id}', [HomeController::class, 'applyChanges']);
 Route::get('getThemes', [ThemeController::class, 'getThemes']);
 Route::get('getThemeDetail/{id}', [ThemeController::class, 'getThemeDetail']);
-Route::get('getThemeReview/{id}', [ThemeController::class, 'getThemeReview']);
+Route::get('getThemeReviews/{id}', [ThemeController::class, 'getThemeReviews']);

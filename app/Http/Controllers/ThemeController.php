@@ -53,10 +53,10 @@ class ThemeController extends Controller
                 'message' => 'Theme not found!',
             ], Response::HTTP_NOT_FOUND);
         }
-        $themeDetail = $themeDetail->load(['shop_details']);
+        $themeDetail = $themeDetail->load(['shop_details_reviews']);
         return response()->json([
             'data' => $themeDetail,
-            'message' => 'Theme review retrieved successfully'
+            'message' => 'Theme reviews retrieved successfully'
         ], Response::HTTP_OK);
     }
 }

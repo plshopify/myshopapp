@@ -21,6 +21,8 @@ class CreateShopDetailThemeTable extends Migration
             $table->string('color');
             $table->string('font_family');
             $table->integer('applied');
+            $table->float('rating')->default(0.0);
+            $table->longText('review')->default('');
             $table->timestamps();
             $table->softDeletes();
         });

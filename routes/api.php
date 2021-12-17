@@ -24,3 +24,4 @@ Route::post('applyChanges/{id}', [HomeController::class, 'applyChanges']);
 Route::get('getThemes', [ThemeController::class, 'getThemes']);
 Route::get('getThemeDetail/{id}', [ThemeController::class, 'getThemeDetail']);
 Route::get('getThemeReviews/{id}', [ThemeController::class, 'getThemeReviews']);
+Route::post('storeReview', [ThemeController::class, 'storeReview']);

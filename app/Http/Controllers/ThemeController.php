@@ -59,4 +59,20 @@ class ThemeController extends Controller
             'message' => 'Theme reviews retrieved successfully'
         ], Response::HTTP_OK);
     }
+
+    public function storeReview(Request $request)
+    {
+        $shop = $this->shop;
+        $theme_id = $request->theme_id;
+        $shopData = ShopDetail::firstWhere('shop_url', $shop);
+
+        $shopData->themes_reviews()->syncWithoutDetaching([$theme_id => [
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]]);
+        return response()->json([
+            'data' => null,
+            'message' => 'Theme review stored successfully'
+        ], Response::HTTP_OK);
+    }
 }

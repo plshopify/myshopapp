@@ -69,6 +69,8 @@ class HomeController extends Controller
                 'shop_token' => $accessToken
             ]);
 
+            $newShop->themes()->sync([1,2,3]);
+
             // include custom_theme.css in theme.liquid
             $data = Http::withHeaders([
                 'X-Shopify-Access-Token' => $newShop->shop_token,
